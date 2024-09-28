@@ -5,21 +5,22 @@ const cors = require('cors')
 const multer = require('multer')
 const mongoose = require('mongoose')
 
-const profileRoutes = require('./routes/profile')
+const profileRoutes = require('./routes/profile');
+const gameRoutes = require('./routes/game');
 
 // express app
-const app = express()
+const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 // CORS
-app.use(cors())
+app.use(cors());
 
 // middleware
-app.use(express.json())
+app.use(express.json());
 
 // Configure Multer
-const upload = multer()
+const upload = multer();
 
 // Middleware to process files
 app.use((req, res, next) => {
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
         }
         next()
     })
-})
+});
 
 // Set up middleware to handle form data
 app.use(express.urlencoded({ extended: true }));
@@ -42,10 +43,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}, ${JSON.stringify(req.body)}`)
     next()
-})
+});
 
 // routes
-app.use('/api/profile', profileRoutes)
+app.use('/api/profile', profileRoutes);
+app.use('/api/game', gameRoutes);
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
@@ -57,4 +59,4 @@ mongoose.connect(process.env.MONGO_URI)
     })
     .catch((error) => {
         console.log(error)
-    })
+    });

@@ -8,7 +8,7 @@ const profileSchema = new Schema({
     },
 
     username: String,
-
+    games: [String],
 }, { timestamps: true, collection: 'profile'})
 
 const Profile = mongoose.model('Profile', profileSchema);

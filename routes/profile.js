@@ -2,13 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    exists,
-    signUp,
-    signIn,
+    authenticate,
 } = require('../controllers/profileController');
 
-router.post('/exists', exists);
-router.post('/signUp', signUp);
-router.post('/signIn', signIn);
+router.post('/authenticate', authenticate);
 
 module.exports = router;
