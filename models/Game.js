@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Track = require('./Track');
 const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({

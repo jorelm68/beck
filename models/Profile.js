@@ -8,6 +8,7 @@ const profileSchema = new Schema({
     },
 
     username: String,
+    activeGame: String,
     games: [String],
 }, { timestamps: true, collection: 'profile'})
 

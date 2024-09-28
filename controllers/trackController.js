@@ -9,37 +9,32 @@ const {
 } = require('../handler');
 const { body, param, validationResult } = require('express-validator');
 
+const Track = require('../models/Track')
 const Profile = require('../models/Profile')
 
-const authenticate = async (req, res) => {
+const create = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
-            body('username').exists().withMessage('body: username is required'),
+            body('track_id').exists().withMessage('body: track_id is required'),
+            body('index').exists().withMessage('body: index is required'),
         ], validationResult);
 
-        const { username } = req.body;
+        const { track_id, index } = req.body;
 
-        let doc = await Profile.findOne({ username });
+        const doc = new Track({
+            _id: track_id,
+            index,
+        });
+        await doc.save();
 
-        // If the user has never signed up before, create a new profile
-        if (!doc) {
-            doc = new Profile({
-                username,
-                activeGame: '',
-                games: [],
-            });
-            await doc.save();
-        }
-
-        // Otherwise, return their information
-        return handleResponse(res, { profile: doc });
+        return handleResponse(res, { track: doc });
     }
     return handleRequest(req, res, code);
 }
 
 const factoryReset = async (req, res) => {
     const code = async (req, res) => {
-        await Profile.deleteMany({});
+        await Track.deleteMany({});
         return handleResponse(res, { success: true });
     }
     return handleRequest(req, res, code);
@@ -48,20 +43,20 @@ const factoryReset = async (req, res) => {
 const read = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
-            body('profile_id').exists().withMessage('body: profile_id is required'),
+            body('track_id').exists().withMessage('body: track_id is required'),
         ], validationResult);
 
-        const { profile_id } = req.body;
+        const { track_id } = req.body;
 
-        const doc = await handleIdentify('Profile', profile_id);
+        const doc = await handleIdentify('Track', track_id);
 
-        return handleResponse(res, { profile: doc });
+        return handleResponse(res, { track: doc });
     }
     return handleRequest(req, res, code);
 }
 
 module.exports = {
-    authenticate,
     factoryReset,
+    create,
     read,
 }
