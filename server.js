@@ -49,6 +49,11 @@ app.use((req, res, next) => {
 app.use('/api/profile', profileRoutes);
 app.use('/api/game', gameRoutes);
 
+// send some HTML to say hello world
+app.use((req, res) => {
+    res.status(404).send('<h1>The API is running!</h1>');
+});
+
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
