@@ -27,7 +27,7 @@ const authenticate = async (req, res) => {
                 username,
                 games: [],
             });
-            await profileModel.save();
+            await doc.save();
         }
 
         // Otherwise, return their information
