@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 
 const profileRoutes = require('./routes/profile');
 const gameRoutes = require('./routes/game');
+const viewRoutes = require('./routes/view');
 
 // express app
 const app = express();
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/profile', profileRoutes);
 app.use('/api/game', gameRoutes);
+app.use('/', viewRoutes)
 
 // send some HTML to say hello world
 app.use((req, res) => {
