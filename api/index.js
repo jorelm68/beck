@@ -5,9 +5,8 @@ const cors = require('cors')
 const multer = require('multer')
 const mongoose = require('mongoose')
 
-const profileRoutes = require('./routes/profile');
-const gameRoutes = require('./routes/game');
-const viewRoutes = require('./routes/view');
+const profileRoutes = require('../routes/profile');
+const gameRoutes = require('../routes/game');
 
 // express app
 const app = express();
@@ -49,7 +48,9 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/profile', profileRoutes);
 app.use('/api/game', gameRoutes);
-app.use('/', viewRoutes)
+app.get('/', (req, res) => {
+    res.send('Hello from Node.js backend!');
+  });
 
 // send some HTML to say hello world
 app.use((req, res) => {
