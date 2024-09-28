@@ -35,6 +35,15 @@ const authenticate = async (req, res) => {
     return handleRequest(req, res, code);
 }
 
+const factoryReset = async (req, res) => {
+    const code = async (req, res) => {
+        await Profile.deleteMany({});
+        return handleResponse(res, { success: true });
+    }
+    return handleRequest(req, res, code);
+}
+
 module.exports = {
     authenticate,
+    factoryReset,
 }
