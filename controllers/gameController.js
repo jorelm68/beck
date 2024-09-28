@@ -104,8 +104,8 @@ const remove = async (req, res) => {
 const move = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
-            body('game').exists().withMessage('body: game is required'),
-            body('profile').exists().withMessage('body: profile is required'),
+            body('game_id').exists().withMessage('body: game_id is required'),
+            body('profile_id').exists().withMessage('body: profile_id is required'),
             body('moveName').exists().withMessage('body: moveName is required'),
             body('moveValue').exists().withMessage('body: moveValue is required'),
         ], validationResult);

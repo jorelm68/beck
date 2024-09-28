@@ -18,6 +18,9 @@ const authenticate = async (req, res) => {
         ], validationResult);
 
         const { username } = req.body;
+
+        return handleResponse(res, { username });
+
         const document = await Profile.findOne({ username });
 
         // If the user has never signed up before, create a new profile
