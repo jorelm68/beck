@@ -1,26 +1,23 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[19]:
 
 
 import pandas as pd
 import numpy as np
-import ast
-from ast import literal_eval
-import arrow
 from sklearn.neighbors import NearestNeighbors
 import joblib
 
 
-# In[2]:
+# In[3]:
 
 
 df = pd.read_csv("songs_data.csv", sep=',', converters={'Artist Genres': lambda x: x.split(", ")}, keep_default_na=False)
 df["Artist Genres"].head()
 
 
-# In[3]:
+# In[4]:
 
 
 #extract simpler genres
@@ -40,12 +37,14 @@ df_all["Genre"] = song_genres
 df_all["Index"] = df_all.index
 
 
-# In[4]:
+# In[8]:
 
 
 included_variables = ["Popularity", "Danceability","Energy","Loudness","Speechiness","Acousticness","Instrumentalness","Liveness","Tempo","Valence", "Album Release Date"]
 indy_included = included_variables + ["Index"]
 print(indy_included)
+
+
 
 
 # In[5]:
