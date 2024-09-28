@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+
 const handleRequest = async (req, res, code) => {
     try {
         await code(req, res)
