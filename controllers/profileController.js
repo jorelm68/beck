@@ -19,13 +19,11 @@ const authenticate = async (req, res) => {
 
         const { username } = req.body;
 
-        return handleResponse(res, { username });
-
-        const document = await Profile.findOne({ username });
+        let doc = await Profile.findOne({ username });
 
         // If the user has never signed up before, create a new profile
-        if (!document) {
-            const profileModel = new Profile({
+        if (!doc) {
+            doc = new Profile({
                 username,
                 games: [],
             });
@@ -33,7 +31,7 @@ const authenticate = async (req, res) => {
         }
 
         // Otherwise, return their information
-        return handleResponse(res, { profile: profileModel });
+        return handleResponse(res, { profile: doc });
     }
     return handleRequest(req, res, code);
 }
@@ -46,7 +44,23 @@ const factoryReset = async (req, res) => {
     return handleRequest(req, res, code);
 }
 
+const read = async (req, res) => {
+    const code = async (req, res) => {
+        await handleInputValidation(req, [
+            body('profile_id').exists().withMessage('body: profile_id is required'),
+        ], validationResult);
+
+        const { profile_id } = req.body;
+
+        const doc = await handleIdentify('Profile', profile_id);
+
+        return handleResponse(res, { profile: doc });
+    }
+    return handleRequest(req, res, code);
+}
+
 module.exports = {
     authenticate,
     factoryReset,
+    read,
 }
