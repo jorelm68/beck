@@ -74,7 +74,8 @@ const handleRandomTrack = async () => {
 const handleML = async (currentTrack, moveName, moveValue) => {
     // Placeholder for machine learning algorithm
 
-    
+    // Return a random track for now
+    return handleRandomTrack();
 
 }
 
