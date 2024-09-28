@@ -72,7 +72,9 @@ const handleRandomTrack = async () => {
 
 const handleML = async (currentTrack, moveName, moveValue) => {
     // Placeholder for machine learning algorithm
-    return await handleRandomTrack();
+
+    
+
 }
 
 module.exports = {
