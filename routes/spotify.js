@@ -7,6 +7,6 @@ const {
 } = require('../controllers/spotifyController');
 
 router.post('/getTrack', getTrack);
-router.post('/getProgress', getProgress);
+// router.post('/getProgress', getProgress);
 
 module.exports = router;

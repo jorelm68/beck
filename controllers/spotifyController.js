@@ -75,44 +75,44 @@ const getTrack = async (req, res) => {
     await handleRequest(req, res, code);
 }
 
-const getProgress = async (req, res) => {
-    const code = async (req, res) => {
-        await handleInputValidation(req, [
-            body('game_id').exists().withMessage('body: game_id is required'),
-            body('profile_id').exists().withMessage('body: profile_id is required'),
-        ], validationResult);
+// const getProgress = async (req, res) => {
+//     const code = async (req, res) => {
+//         await handleInputValidation(req, [
+//             body('game_id').exists().withMessage('body: game_id is required'),
+//             body('profile_id').exists().withMessage('body: profile_id is required'),
+//         ], validationResult);
 
-        const { game_id, profile_id } = req.body;
+//         const { game_id, profile_id } = req.body;
 
-        const gameModel = await handleIdentify('Game', game_id);
+//         const gameModel = await handleIdentify('Game', game_id);
 
-        const profile1 = gameModel.profile1;
-        const you = profile1 === profile_id ? 'profile1' : 'profile2';
+//         const profile1 = gameModel.profile1;
+//         const you = profile1 === profile_id ? 'profile1' : 'profile2';
         
-        let progress = 0;
-        if (gameModel[you + 'Path'].length > 0) {
-            progress = gameModel[you + 'Path'].length - 1;
-        }
+//         let progress = 0;
+//         if (gameModel[you + 'Path'].length > 0) {
+//             progress = gameModel[you + 'Path'].length - 1;
+//         }
 
-        const response = await axios.post(`${process.env.FLASK_URI}/shortest_steps`, {
-            start: gameModel.startTrack,
-            end: gameModel.endTrack,
-        })
+//         const response = await axios.post(`${process.env.FLASK_URI}/shortest_steps`, {
+//             start: gameModel.startTrack,
+//             end: gameModel.endTrack,
+//         })
 
-        const {
-            shortest_steps,
-        } = response.data;
+//         const {
+//             shortest_steps,
+//         } = response.data;
 
-        const shortest_steps_int = parseInt(shortest_steps);
+//         const shortest_steps_int = parseInt(shortest_steps);
 
-        const percentage = (progress / (shortest_steps_int + progress)) * 100;
+//         const percentage = (progress / (shortest_steps_int + progress)) * 100;
         
-        await handleResponse(res, { progress: percentage });
-    }
-    await handleRequest(req, res, code);
-}
+//         await handleResponse(res, { progress: percentage });
+//     }
+//     await handleRequest(req, res, code);
+// }
 
 module.exports = {
     getTrack,
-    getProgress,
+    // getProgress,
 }
