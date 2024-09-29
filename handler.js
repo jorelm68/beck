@@ -66,23 +66,6 @@ const handleIdentify = async (modelName, _id) => {
     return model;
 }
 
-const createNewTrack = async (track_id, index) => {
-    const Track = mongoose.model('Track');
-
-    let track = await Track.findOne({ _id: track_id });
-    if (track) {
-        return track_id;
-    }
-    else {
-        const newTrack = new Track({
-            _id: track_id,
-            index: index,
-        });
-        await newTrack.save();
-        return newTrack._id;
-    }
-}
-
 module.exports = {
     handleInputValidation,
     handleRequest,
@@ -90,5 +73,4 @@ module.exports = {
     handleMongoFilter,
     handleMongoGet,
     handleIdentify,
-    createNewTrack,
 }

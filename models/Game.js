@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Track = require('./Track');
 const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({
@@ -15,10 +14,10 @@ const gameSchema = new Schema({
     startTime: String,
     profile1EndTime: String,
     profile2EndTime: String,
-    profile1Path: [String],
-    profile2Path: [String],
-    startTrack: String,
-    endTrack: String,
+    profile1Path: [Number],
+    profile2Path: [Number],
+    startTrack: Number,
+    endTrack: Number,
     
 }, { timestamps: true, collection: 'game'})
 

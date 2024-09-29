@@ -7,7 +7,6 @@ const {
     handleRequest,
     handleResponse,
     handleIdentify,
-    createNewTrack,
 } = require('../handler');
 const { body, param, validationResult } = require('express-validator');
 
