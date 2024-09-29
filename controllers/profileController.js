@@ -97,9 +97,6 @@ const joinGame = async (req, res) => {
         if (!gameModel) {
             throw new Error('Game not found');
         }
-        if (gameModel.profile1 !== '' && gameModel.profile2 !== '') {
-            throw new Error('Game is full');
-        }
         if (profileModel.activeGame) {
             throw new Error('Profile is already in a game');
         }
