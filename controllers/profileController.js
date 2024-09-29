@@ -10,6 +10,7 @@ const {
 const { body, param, validationResult } = require('express-validator');
 
 const Profile = require('../models/Profile')
+const Game = require('../models/Game')
 
 const authenticate = async (req, res) => {
     const code = async (req, res) => {
@@ -78,9 +79,55 @@ const leaveGame = async (req, res) => {
     return handleRequest(req, res, code);
 }
 
+const joinGame = async (req, res) => {
+    const code = async (req, res) => {
+        await handleInputValidation(req, [
+            body('profile_id').exists().withMessage('body: profile_id is required'),
+            body('name').exists().withMessage('body: name is required'),
+        ], validationResult);
+
+        const { profile_id, name } = req.body;
+
+        const profileModel = await handleIdentify('Profile', profile_id);
+        const gameModel = await Game.findOne({ name });
+
+        if (!profileModel) {
+            throw new Error('Profile not found');
+        }
+        if (!gameModel) {
+            throw new Error('Game not found');
+        }
+        if (gameModel.profile1 && gameModel.profile2) {
+            throw new Error('Game is full');
+        }
+        if (profileModel.activeGame) {
+            throw new Error('Profile is already in a game');
+        }
+        if (gameModel.profile1 === profile_id || gameModel.profile2 === profile_id) {
+            throw new Error('Profile is already in the game');
+        }
+
+        profileModel.games.push(gameModel._id);
+        profileModel.activeGame = gameModel._id;
+        await profileModel.save();
+
+        if (!gameModel.profile1) {
+            gameModel.profile1 = profile_id;
+        }
+        else {
+            gameModel.profile2 = profile_id;
+        }
+        await gameModel.save();
+
+        return handleResponse(res, { game: gameModel });
+    }
+    return handleRequest(req, res, code);
+}
+
 module.exports = {
     authenticate,
     factoryReset,
     read,
     leaveGame,
+    joinGame,
 }
