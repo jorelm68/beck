@@ -22,7 +22,7 @@ const create = async (req, res) => {
         ], validationResult);
 
         const { name, profile } = req.body;
-        
+
         const profileModel = await handleIdentify('Profile', profile);
 
         // Get a random start track
@@ -34,24 +34,30 @@ const create = async (req, res) => {
             endTrack = await handleRandomTrack();
         }
 
+        let gameModel = await Game.findOne({ name: name });
+
         // Create a new game
-        const gameModel = new Game({
-            name,
-            profile1: profileModel._id,
-            profile2: '',
-            winner: '',
-            startTime: new Date().toISOString(),
-            profile1EndTime: '',
-            profile2EndTime: '',
-            profile1Path: [startTrack],
-            profile2Path: [startTrack],
-            startTrack,
-            endTrack,
-        });
-        await gameModel.save();
+        if (!gameModel) {
+            gameModel = new Game({
+                name,
+                profile1: profileModel._id,
+                profile2: '',
+                winner: '',
+                startTime: new Date().toISOString(),
+                profile1EndTime: '',
+                profile2EndTime: '',
+                profile1Path: [startTrack],
+                profile2Path: [startTrack],
+                startTrack,
+                endTrack,
+            });
+            await gameModel.save();
+        }
 
         // Add the game to the profiles
+        profileModel.games.pull(gameModel._id);
         profileModel.games.push(gameModel._id);
+        profileModel.activeGame = gameModel._id;
         await profileModel.save();
 
         return handleResponse(res, { game: gameModel });
@@ -62,12 +68,12 @@ const create = async (req, res) => {
 const read = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
-            body('game').exists().withMessage('body: game is required'),
+            body('game_id').exists().withMessage('body: game_id is required'),
         ], validationResult);
 
-        const { game } = req.body;
+        const { game_id } = req.body;
 
-        const gameModel = await handleIdentify(Game, game);
+        const gameModel = await handleIdentify('Game', game_id);
 
         if (!gameModel) {
             throw new Error('Game not found');
@@ -109,7 +115,7 @@ const move = async (req, res) => {
         ], validationResult);
 
         const { game, profile, moveName, moveValue } = req.body;
-        
+
         // Make sure it is a valid game
         const gameModel = await handleIdentify(Game, game);
         if (!gameModel) {

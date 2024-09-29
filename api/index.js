@@ -7,6 +7,8 @@ const mongoose = require('mongoose')
 
 const profileRoutes = require('../routes/profile');
 const gameRoutes = require('../routes/game');
+const trackRoutes = require('../routes/track');
+const spotifyRoutes = require('../routes/spotify');
 
 // express app
 const app = express();
@@ -48,6 +50,8 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/profile', profileRoutes);
 app.use('/api/game', gameRoutes);
+app.use('/api/track', trackRoutes);
+app.use('/api/spotify', spotifyRoutes);
 app.get('/', (req, res) => {
     res.send('Hello from Node.js backend!');
   });
