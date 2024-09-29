@@ -69,14 +69,18 @@ const handleIdentify = async (modelName, _id) => {
 const createNewTrack = async (track_id, index) => {
     const Track = mongoose.model('Track');
 
-    const track = new Track({
-        _id: track_id,
-        index: index,
-    });
-
-    await track.save();
-
-    return track._id;
+    let track = await Track.findOne({ _id: track_id });
+    if (track) {
+        return track_id;
+    }
+    else {
+        const newTrack = new Track({
+            _id: track_id,
+            index: index,
+        });
+        await newTrack.save();
+        return newTrack._id;
+    }
 }
 
 module.exports = {
