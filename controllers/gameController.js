@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const mongoose = require('mongoose');
+const axios = require('axios');
 const {
     handleInputValidation,
     handleRequest,
@@ -157,18 +158,16 @@ const move = async (req, res) => {
         const trackModel = await handleIdentify('Track', lastTrack);
 
         // Run the machine learning algorithm
-        const response = await axios.post(`${process.env.FLASK_URI}/ml_run`, {
+        const response = await axios.post(`${process.env.FLASK_URI}/api/run_ml`, {
             index: trackModel.index,
             variable: moveName,
             direction: moveValue,
         });
 
-        console.log(response);
-
         // If the track is the end track, the profile wins
         if (nextTrack === gameModel.endTrack) {
             if (!gameModel.winner) {
-                gameModel.winner = profile;
+                gameModel.winner = profile_id;
             }
 
             if (profileNumber === 1) {
