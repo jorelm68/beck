@@ -30,7 +30,7 @@ const getTrack = async (req, res) => {
             index: indexInt,
         })
         
-        const {
+        let {
             album,
             artist,
             name,
@@ -47,6 +47,10 @@ const getTrack = async (req, res) => {
             valence,
             tempo,
         } = response.data;
+
+        if (!preview) {
+            preview = '';
+        }
 
         const track = {
             index: indexInt,
