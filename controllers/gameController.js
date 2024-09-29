@@ -18,14 +18,12 @@ const create = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
             body('name').exists().withMessage('body: name is required'),
-            body('profile1').exists().withMessage('body: profile1 is required'),
-            body('profile2').exists().withMessage('body: profile2 is required'),
+            body('profile').exists().withMessage('body: profile1 is required'),
         ], validationResult);
 
-        const { name, profile1, profile2 } = req.body;
+        const { name, profile } = req.body;
         
-        const profile1Model = await handleIdentify(Profile, profile1);
-        const profile2Model = await handleIdentify(Profile, profile2);
+        const profileModel = await handleIdentify('Profile', profile);
 
         // Get a random start track
         const startTrack = await handleRandomTrack();
@@ -39,8 +37,8 @@ const create = async (req, res) => {
         // Create a new game
         const gameModel = new Game({
             name,
-            profile1: profile1Model._id,
-            profile2: profile2Model._id,
+            profile1: profileModel._id,
+            profile2: '',
             winner: '',
             startTime: new Date().toISOString(),
             profile1EndTime: '',
@@ -53,10 +51,8 @@ const create = async (req, res) => {
         await gameModel.save();
 
         // Add the game to the profiles
-        profile1Model.games.push(gameModel._id);
-        profile2Model.games.push(gameModel._id);
-        await profile1Model.save();
-        await profile2Model.save();
+        profileModel.games.push(gameModel._id);
+        await profileModel.save();
 
         return handleResponse(res, { game: gameModel });
     }
