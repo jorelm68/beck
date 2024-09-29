@@ -13,11 +13,21 @@ const spotifyRoutes = require('./routes/spotify');
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+// Allow multiple origins
+const allowedOrigins = ['http://localhost:3000', 'https://mhacks-1fa15c2d64bb.herokuapp.com'];
 
 const corsOptions = {
-    origin: '*', // Replace with actual IPs/domains
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true, // Allow cookies/auth credentials if necessary
 };
-// 
+
 app.use(cors(corsOptions));
 
 // middleware
