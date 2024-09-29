@@ -66,30 +66,17 @@ const handleIdentify = async (modelName, _id) => {
     return model;
 }
 
-const handleRandomTrack = async () => {
-    const tracks = ['track1', 'track2', 'track3', 'track4', 'track5'];
-    return tracks[Math.floor(Math.random() * tracks.length)];
-}
+const createNewTrack = async (track_id, index) => {
+    const Track = mongoose.model('Track');
 
-const handleML = async (currentTrack, moveName, moveValue) => {
-    // Placeholder for machine learning algorithm
+    const track = new Track({
+        _id: track_id,
+        index: index,
+    });
 
+    await track.save();
 
-    // exec('python3 genre_filtered.py', (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.error(`Error: ${error.message}`);
-    //         return;
-    //     }
-    //     if (stderr) {
-    //         console.error(`stderr: ${stderr}`);
-    //         return;
-    //     }
-    //     console.log(`stdout: ${stdout}`);
-    // });
-
-
-    // Return a random track for now
-    return handleRandomTrack();
+    return track._id;
 }
 
 module.exports = {
@@ -99,6 +86,5 @@ module.exports = {
     handleMongoFilter,
     handleMongoGet,
     handleIdentify,
-    handleRandomTrack,
-    handleML,
+    createNewTrack,
 }

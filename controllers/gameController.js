@@ -6,8 +6,7 @@ const {
     handleRequest,
     handleResponse,
     handleIdentify,
-    handleRandomTrack,
-    handleML,
+    createNewTrack,
 } = require('../handler');
 const { body, param, validationResult } = require('express-validator');
 
@@ -26,12 +25,18 @@ const create = async (req, res) => {
         const profileModel = await handleIdentify('Profile', profile);
 
         // Get a random start track
-        const startTrack = await handleRandomTrack();
+        const response = await axios.post(`${process.env.FLASK_URI}/ml_random`);
+        const { index, track_id } = response.data;
+        await createNewTrack(track_id, index);
+        const startTrack = track_id;
 
         // Get a random end track
         let endTrack = undefined;
         while (!endTrack || endTrack === startTrack) {
-            endTrack = await handleRandomTrack();
+            const response = await axios.post(`${process.env.FLASK_URI}/ml_random`);
+            const { index, track_id } = response.data;
+            await createNewTrack(track_id, index);
+            endTrack = track_id;
         }
 
         let gameModel = await Game.findOne({ name: name });
@@ -92,7 +97,7 @@ const remove = async (req, res) => {
 
         const { game } = req.body;
 
-        const gameModel = await handleIdentify(Game, game);
+        const gameModel = await handleIdentify('Game', game);
 
         if (!gameModel) {
             throw new Error('Game not found');
@@ -114,27 +119,27 @@ const move = async (req, res) => {
             body('moveValue').exists().withMessage('body: moveValue is required'),
         ], validationResult);
 
-        const { game, profile, moveName, moveValue } = req.body;
+        const { game_id, profile_id, moveName, moveValue } = req.body;
 
         // Make sure it is a valid game
-        const gameModel = await handleIdentify(Game, game);
+        const gameModel = await handleIdentify('Game', game_id);
         if (!gameModel) {
             throw new Error('Game not found');
         }
 
         // Make sure it is a valid profile
-        const profileModel = await handleIdentify(Profile, profile);
+        const profileModel = await handleIdentify('Profile', profile_id);
         if (!profileModel) {
             throw new Error('Profile not found');
         }
 
         // Make sure the profile is in the game
-        if (gameModel.profile1 !== profile && gameModel.profile2 !== profile) {
+        if (gameModel.profile1 !== profile_id && gameModel.profile2 !== profile_id) {
             throw new Error('Profile not in the game');
         }
 
         // Get which player is making the move
-        const profileNumber = gameModel.profile1 === profile ? 1 : 2;
+        const profileNumber = gameModel.profile1 === profile_id ? 1 : 2;
 
         // Make sure the player has not already finished
         if (profileNumber === 1 && gameModel.profile1EndTime) {
@@ -148,8 +153,17 @@ const move = async (req, res) => {
         const tracks = gameModel[`profile${profileNumber}Path`];
         const lastTrack = tracks[tracks.length - 1];
 
+        // Get the model from the lastTrack
+        const trackModel = await handleIdentify('Track', lastTrack);
+
         // Run the machine learning algorithm
-        const nextTrack = await handleML(lastTrack, moveName, moveValue);
+        const response = await axios.post(`${process.env.FLASK_URI}/ml_run`, {
+            index: trackModel.index,
+            variable: moveName,
+            direction: moveValue,
+        });
+
+        console.log(response);
 
         // If the track is the end track, the profile wins
         if (nextTrack === gameModel.endTrack) {

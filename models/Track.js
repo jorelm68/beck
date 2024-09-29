@@ -10,6 +10,6 @@ const trackSchema = new Schema({
     index: Number,
 }, { timestamps: true, collection: 'track'})
 
-const Track = mongoose.model('track', trackSchema);
+const Track = mongoose.model('Track', trackSchema);
 
 module.exports = Track;
