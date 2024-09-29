@@ -21,10 +21,15 @@ const getTrack = async (req, res) => {
 
         const { index } = req.body;
 
-        const response = await axios.post(`${process.env.FLASK_URI}/index_to_row`, {
-            index,
-        })
+        const indexInt = parseInt(index);
+        if (index < 0 || index > 10000) {
+            throw new Error('Index must be between 0 and 999');
+        }   
 
+        const response = await axios.post('https://flask-mhacks-2024f8b916e5.herokuapp.com/index_to_row', {
+            index: indexInt,
+        })
+        
         const {
             album,
             artist,
@@ -44,20 +49,21 @@ const getTrack = async (req, res) => {
         } = response.data;
 
         const track = {
+            index: indexInt,
             album,
             artist,
             name,
             preview,
             image,
-            danceability,
-            energy,
-            loudness,
-            speechiness,
-            acousticness,
-            instrumentalness,
-            liveness,
-            valence,
-            tempo,
+            danceability: parseInt(danceability),
+            energy: parseInt(energy),
+            loudness: parseInt(loudness),
+            speechiness: parseInt(speechiness),
+            acousticness: parseInt(acousticness),
+            instrumentalness: parseInt(instrumentalness),
+            liveness: parseInt(liveness),
+            valence: parseInt(valence),
+            tempo: parseInt(tempo),
             albumReleaseDate,
         };
 

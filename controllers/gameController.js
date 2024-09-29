@@ -26,17 +26,15 @@ const create = async (req, res) => {
 
         // Get a random start track
         const response = await axios.post(`${process.env.FLASK_URI}/ml_random`);
-        const { index, track_id } = response.data;
-        await createNewTrack(track_id, index);
-        const startTrack = track_id;
+        const { index } = response.data;
+        const startTrack = index;
 
         // Get a random end track
         let endTrack = undefined;
         while (!endTrack || endTrack === startTrack) {
             const response = await axios.post(`${process.env.FLASK_URI}/ml_random`);
-            const { index, track_id } = response.data;
-            await createNewTrack(track_id, index);
-            endTrack = track_id;
+            const { index } = response.data;
+            endTrack = index;
         }
 
         let gameModel = await Game.findOne({ name: name });
@@ -153,23 +151,17 @@ const move = async (req, res) => {
         const tracks = gameModel[`profile${profileNumber}Path`];
         const lastTrack = tracks[tracks.length - 1];
 
-        // Get the model from the lastTrack
-        const trackModel = await handleIdentify('Track', lastTrack);
-
         // Run the machine learning algorithm
         const response = await axios.post(`${process.env.FLASK_URI}/api/run_ml`, {
-            index: trackModel.index,
+            index: lastTrack,
             variable: moveName,
             direction: moveValue,
         });
 
-        const { result, track_id} = response.data;
+        const { result } = response.data;
 
-        console.log(trackModel._id, trackModel.index, moveName, moveValue);
-        console.log(result, track_id);
-
-        // Create the new track
-        await createNewTrack(track_id, result);
+        console.log(lastTrack, moveName, moveValue);
+        console.log(result);
 
         // If the track is the end track, the profile wins
         let nextTrack = track_id;
