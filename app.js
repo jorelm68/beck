@@ -14,8 +14,13 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
-// CORS
-app.use(cors());
+const corsOptions = {
+    origin: ['http://35.3.240.203', 'http://35.3.198.28', 'http://35.3.35.25'], // Replace with actual IPs/domains
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed methods
+    credentials: true, // If needed for cookies/sessions
+};
+// 
+app.use(cors(corsOptions));
 
 // middleware
 app.use(express.json());
@@ -52,7 +57,7 @@ app.use('/api/game', gameRoutes);
 app.use('/api/spotify', spotifyRoutes);
 app.get('/', (req, res) => {
     res.send('Hello from Node.js backend!');
-  });
+});
 
 // send some HTML to say hello world
 app.use((req, res) => {
