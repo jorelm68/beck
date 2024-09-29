@@ -60,8 +60,27 @@ const read = async (req, res) => {
     return handleRequest(req, res, code);
 }
 
+const leaveGame = async (req, res) => {
+    const code = async (req, res) => {
+        await handleInputValidation(req, [
+            body('profile_id').exists().withMessage('body: profile_id is required'),
+        ], validationResult);
+
+        const { profile_id } = req.body;
+
+        const doc = await handleIdentify('Profile', profile_id);
+
+        doc.activeGame = '';
+        await doc.save();
+
+        return handleResponse(res, { success: true });
+    }
+    return handleRequest(req, res, code);
+}
+
 module.exports = {
     authenticate,
     factoryReset,
     read,
+    leaveGame,
 }
