@@ -17,11 +17,12 @@ const Game = require('../models/Game');
 const create = async (req, res) => {
     const code = async (req, res) => {
         await handleInputValidation(req, [
+            body('name').exists().withMessage('body: name is required'),
             body('profile1').exists().withMessage('body: profile1 is required'),
             body('profile2').exists().withMessage('body: profile2 is required'),
         ], validationResult);
 
-        const { profile1, profile2 } = req.body;
+        const { name, profile1, profile2 } = req.body;
         
         const profile1Model = await handleIdentify(Profile, profile1);
         const profile2Model = await handleIdentify(Profile, profile2);
@@ -37,6 +38,7 @@ const create = async (req, res) => {
 
         // Create a new game
         const gameModel = new Game({
+            name,
             profile1: profile1Model._id,
             profile2: profile2Model._id,
             winner: '',
@@ -169,9 +171,36 @@ const move = async (req, res) => {
     return handleRequest(req, res, code);
 }
 
+const factoryReset = async (req, res) => {
+    const code = async (req, res) => {
+        await handleInputValidation(req, [
+            body('profile').exists().withMessage('body: profile is required'),
+        ], validationResult);
+
+        const { profile } = req.body;
+
+        const profileModel = await handleIdentify(Profile, profile);
+
+        if (!profileModel) {
+            throw new Error('Profile not found');
+        }
+
+        // Remove all games
+        await Game.deleteMany({ _id: { $in: profileModel.games } });
+
+        // Reset the profile
+        profileModel.games = [];
+        await profileModel.save();
+
+        return handleResponse(res, { success: true });
+    }
+    return handleRequest(req, res, code);
+}
+
 module.exports = {
     create,
     read,
     remove,
     move,
+    factoryReset,
 }

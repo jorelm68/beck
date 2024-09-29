@@ -8,6 +8,7 @@ const gameSchema = new Schema({
         default: () => `Game-${new mongoose.Types.ObjectId()}`,
     },
 
+    name: String,
     profile1: String,
     profile2: String,
     winner: String,

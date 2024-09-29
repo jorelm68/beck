@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const { exec } = require('child_process');
 
 const handleRequest = async (req, res, code) => {
     try {
@@ -74,9 +74,22 @@ const handleRandomTrack = async () => {
 const handleML = async (currentTrack, moveName, moveValue) => {
     // Placeholder for machine learning algorithm
 
+
+    // exec('python3 genre_filtered.py', (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.error(`Error: ${error.message}`);
+    //         return;
+    //     }
+    //     if (stderr) {
+    //         console.error(`stderr: ${stderr}`);
+    //         return;
+    //     }
+    //     console.log(`stdout: ${stdout}`);
+    // });
+
+
     // Return a random track for now
     return handleRandomTrack();
-
 }
 
 module.exports = {
