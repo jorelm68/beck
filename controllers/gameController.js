@@ -164,7 +164,13 @@ const move = async (req, res) => {
             direction: moveValue,
         });
 
+        const { result, track_id} = response.data;
+
+        // Create the new track
+        await createNewTrack(track_id, result);
+
         // If the track is the end track, the profile wins
+        let nextTrack = track_id;
         if (nextTrack === gameModel.endTrack) {
             if (!gameModel.winner) {
                 gameModel.winner = profile_id;
