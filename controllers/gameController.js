@@ -166,6 +166,9 @@ const move = async (req, res) => {
 
         const { result, track_id} = response.data;
 
+        console.log(trackModel._id, trackModel.index, moveName, moveValue);
+        console.log(result, track_id);
+
         // Create the new track
         await createNewTrack(track_id, result);
 
