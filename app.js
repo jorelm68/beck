@@ -5,9 +5,9 @@ const cors = require('cors')
 const multer = require('multer')
 const mongoose = require('mongoose')
 
-const profileRoutes = require('../routes/profile');
-const gameRoutes = require('../routes/game');
-const spotifyRoutes = require('../routes/spotify');
+const profileRoutes = require('./routes/profile');
+const gameRoutes = require('./routes/game');
+const spotifyRoutes = require('./routes/spotify');
 
 // express app
 const app = express();
