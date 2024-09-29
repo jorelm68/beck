@@ -71,6 +71,24 @@ const leaveGame = async (req, res) => {
 
         const doc = await handleIdentify('Profile', profile_id);
 
+        const gameModel = await handleIdentify('Game', doc.activeGame);
+        if (!gameModel) {
+            return handleResponse(res, { success: true });
+        }
+
+        if (gameModel.profile1 === profile_id) {
+            gameModel.profile1 = '';
+        }
+        else {
+            gameModel.profile2 = '';
+        }
+        await gameModel.save();
+
+        if (!gameModel.profile1 && !gameModel.profile2) {
+            // Delete the game if both profiles have left
+            await Game.deleteOne({ _id: gameModel._id });
+        }
+
         doc.activeGame = '';
         await doc.save();
 
@@ -99,6 +117,9 @@ const joinGame = async (req, res) => {
         }
         if (profileModel.activeGame) {
             throw new Error('Profile is already in a game');
+        }
+        if (gameModel.profile1 && gameModel.profile2) {
+            throw new Error('Game is full');
         }
         if (gameModel.profile1 === profile_id || gameModel.profile2 === profile_id) {
             throw new Error('Profile is already in the game');
