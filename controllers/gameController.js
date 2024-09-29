@@ -164,7 +164,7 @@ const move = async (req, res) => {
         console.log(result);
 
         // If the track is the end track, the profile wins
-        let nextTrack = track_id;
+        let nextTrack = result;
         if (nextTrack === gameModel.endTrack) {
             if (!gameModel.winner) {
                 gameModel.winner = profile_id;
