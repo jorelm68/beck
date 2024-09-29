@@ -32,6 +32,7 @@ const getTrack = async (req, res) => {
         
         let {
             album,
+            genres,
             artist,
             name,
             image,
@@ -50,6 +51,7 @@ const getTrack = async (req, res) => {
 
         const track = {
             index: indexInt,
+            genres,
             album,
             artist,
             name,
