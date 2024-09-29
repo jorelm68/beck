@@ -15,9 +15,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 const corsOptions = {
-    origin: ['http://35.3.240.203', 'http://35.3.198.28', 'http://35.3.35.25'], // Replace with actual IPs/domains
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Allowed methods
-    credentials: true, // If needed for cookies/sessions
+    origin: '*', // Replace with actual IPs/domains
 };
 // 
 app.use(cors(corsOptions));
