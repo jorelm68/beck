@@ -26,7 +26,7 @@ const getTrack = async (req, res) => {
             throw new Error('Index must be between 0 and 999');
         }   
 
-        const response = await axios.post('https://flask-mhacks-2024f8b916e5.herokuapp.com/index_to_row', {
+        const response = await axios.post(`${process.env.FLASK_URI}/index_to_row`, {
             index: indexInt,
         })
         
